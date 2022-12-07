@@ -12,8 +12,6 @@ CREATE TABLE students
     city       Integer references cities (id)
 );
 
-
-
 INSERT INTO cities (name)
 VALUES ('Minsk'),
        ('Brest'),

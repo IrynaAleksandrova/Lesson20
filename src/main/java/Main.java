@@ -40,6 +40,13 @@ public class Main {
         preparedStatement.executeUpdate();
     }
 
+    public static void signUpCity(Connection connection, String str) throws SQLException {
+        String insert = "INSERT INTO cities (name)" + "VALUES(?)";
+        PreparedStatement prSt = connection.prepareStatement(insert);
+        prSt.setString(1, str);
+        prSt.executeUpdate();
+    }
+
     public static void viewingTable(Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(QUERY_GET_DATA_TABLES);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -59,24 +66,37 @@ public class Main {
             executeUpdate(connection, QUERY_DELETE_ALL_TABLES);
             System.out.println("Tables deleted");
             Thread.sleep(2000);
+
             executeUpdate(connection, QUERY_CREATE_CITIES_TABLE.concat(QUERY_CREATE_STUDENTS_TABLE));
             System.out.println("Tables created");
             Thread.sleep(2000);
+
             executeUpdate(connection, QUERY_FILL_CITIES_TABLE);
             System.out.println("Cities Table filled");
             Thread.sleep(2000);
+
             executeUpdate(connection, QUERY_FILL_STUDENTS_TABLE);
             System.out.println("Students Table filled");
             Thread.sleep(2000);
-
             viewingTable(connection);
             System.out.println();
+
             executeUpdate(connection, "INSERT INTO students (first_name, last_name, city)\n" +
                     "VALUES ('Petrovsky', 'Serge', 1);");
             viewingTable(connection);
             System.out.println();
+
             executeUpdate(connection, "UPDATE students SET city=2 WHERE id=5;");
             viewingTable(connection);
+            System.out.println();
+
+            signUpCity(connection, "Molodechno");
+            signUpCity(connection, "Batumi");
+            signUpCity(connection, "Pinsk");
+            executeUpdate(connection, "UPDATE students SET city=5 WHERE id=2;");
+            viewingTable(connection);
+            System.out.println();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
