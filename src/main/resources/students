@@ -1,0 +1,40 @@
+CREATE TABLE cities
+(
+    id   SERIAL PRIMARY KEY,
+    name VARCHAR(20)
+);
+
+CREATE TABLE students
+(
+    id         SERIAL PRIMARY KEY,
+    first_name VARCHAR(20),
+    last_name  VARCHAR(30),
+    city       Integer references cities (id)
+);
+
+
+
+INSERT INTO cities (name)
+VALUES ('Minsk'),
+       ('Brest'),
+       ('Mogilev');
+
+SELECT *
+FROM cities;
+
+INSERT INTO students (first_name, last_name, city)
+VALUES ('Petrov', 'Mihail', 1),
+       ('Kuchini', 'Bobby', 2),
+       ('Bezmozgov', 'David', 1),
+       ('Ivanov', 'Sam', 3);
+
+SELECT *
+FROM students;
+
+SELECT students.id, students.first_name, students.last_name, cities.name
+FROM students
+         LEFT JOIN cities ON students.city = cities.id;
+
+UPDATE students
+SET city=2
+WHERE id = 5;
