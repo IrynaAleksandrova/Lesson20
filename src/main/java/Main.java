@@ -41,8 +41,7 @@ public class Main {
     }
 
     public static void signUpCity(Connection connection, String str) throws SQLException {
-        String insert = "INSERT INTO cities (name)" + "VALUES(?)";
-        PreparedStatement prSt = connection.prepareStatement(insert);
+        PreparedStatement prSt = connection.prepareStatement("INSERT INTO cities (name) VALUES(?)");
         prSt.setString(1, str);
         prSt.executeUpdate();
     }
