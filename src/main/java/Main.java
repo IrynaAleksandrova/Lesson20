@@ -61,7 +61,6 @@ public class Main {
                 String lastName = resultSet.getString(3);
                 String city = resultSet.getString(4);
                 System.out.println("Students: " + id + " - " + firstName + " " + lastName + "; " + city);
-                System.out.println();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -87,13 +86,16 @@ public class Main {
             System.out.println("Students Table filled");
             Thread.sleep(2000);
             viewingTable(connection);
+            System.out.println();
 
             executeUpdate(connection, "INSERT INTO students (first_name, last_name, city)\n" +  // добавление одного студента
                     "VALUES ('Petrovsky', 'Serge', 1);");
             viewingTable(connection);
+            System.out.println();
 
             executeUpdate(connection, "UPDATE students SET city=2 WHERE id=5;");  // изменение места жительства у студента
             viewingTable(connection);
+            System.out.println();
 
             signUpCity(connection, "Molodechno");                                   // добавление новых городов в БД
             signUpCity(connection, "Batumi");
