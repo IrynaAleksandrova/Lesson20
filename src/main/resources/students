@@ -1,10 +1,10 @@
-CREATE TABLE cities
+CREATE TABLE cities                                                         //создание таблицы Города
 (
     id   SERIAL PRIMARY KEY,
     name VARCHAR(20)
 );
 
-CREATE TABLE students
+CREATE TABLE students                                                       // создание таблицы Студенты
 (
     id         SERIAL PRIMARY KEY,
     first_name VARCHAR(20),
@@ -12,27 +12,29 @@ CREATE TABLE students
     city       Integer references cities (id)
 );
 
-INSERT INTO cities (name)
+INSERT INTO cities (name)                                                   // заполнение таблицы Города
 VALUES ('Minsk'),
        ('Brest'),
        ('Mogilev');
 
-SELECT *
+SELECT *                                                                    // выбрать все из таблицы Города
 FROM cities;
 
-INSERT INTO students (first_name, last_name, city)
+INSERT INTO students (first_name, last_name, city)                          // заполнение таблицы Студенты
 VALUES ('Petrov', 'Mihail', 1),
        ('Kuchini', 'Bobby', 2),
        ('Bezmozgov', 'David', 1),
        ('Ivanov', 'Sam', 3);
 
-SELECT *
+SELECT *                                                                    // выбрать все из таблицы Студенты
 FROM students;
 
-SELECT students.id, students.first_name, students.last_name, cities.name
+SELECT students.id, students.first_name, students.last_name, cities.name    // выбрать все из таблицы Студенты не забыв про Города
 FROM students
-         LEFT JOIN cities ON students.city = cities.id;
+LEFT JOIN cities ON students.city = cities.id;
 
-UPDATE students
+INSERT INTO cities (name) VALUES('Pinsk');                                  // добавить в таблицу Города еще пару новых городов 
+
+UPDATE students                                                             // заменить у студента №5 город на новый №2 
 SET city=2
 WHERE id = 5;

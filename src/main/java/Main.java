@@ -35,27 +35,36 @@ public class Main {
             "FROM students\n" +
             "LEFT JOIN cities ON students.city = cities.id;";
 
-    public static void executeUpdate(Connection connection, String query) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.executeUpdate();
+    public static void executeUpdate(Connection connection, String query) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void signUpCity(Connection connection, String str) throws SQLException {
-        PreparedStatement prSt = connection.prepareStatement("INSERT INTO cities (name) VALUES(?)");
-        prSt.setString(1, str);
-        prSt.executeUpdate();
+    public static void signUpCity(Connection connection, String str) {
+        try (PreparedStatement prSt = connection.prepareStatement("INSERT INTO cities (name) VALUES(?)")) {
+            prSt.setString(1, str);
+            prSt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void viewingTable(Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(QUERY_GET_DATA_TABLES);
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        while (resultSet.next()) {
-            int id = resultSet.getInt(1);
-            String firstName = resultSet.getString(2);
-            String lastName = resultSet.getString(3);
-            String city = resultSet.getString(4);
-            System.out.println("Students: " + id + " - " + firstName + " " + lastName + "; " + city);
+    public static void viewingTable(Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(QUERY_GET_DATA_TABLES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String firstName = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                String city = resultSet.getString(4);
+                System.out.println("Students: " + id + " - " + firstName + " " + lastName + "; " + city);
+                System.out.println();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -78,26 +87,29 @@ public class Main {
             System.out.println("Students Table filled");
             Thread.sleep(2000);
             viewingTable(connection);
-            System.out.println();
 
-            executeUpdate(connection, "INSERT INTO students (first_name, last_name, city)\n" +
+            executeUpdate(connection, "INSERT INTO students (first_name, last_name, city)\n" +  // добавление одного студента
                     "VALUES ('Petrovsky', 'Serge', 1);");
             viewingTable(connection);
-            System.out.println();
 
-            executeUpdate(connection, "UPDATE students SET city=2 WHERE id=5;");
+            executeUpdate(connection, "UPDATE students SET city=2 WHERE id=5;");  // изменение места жительства у студента
             viewingTable(connection);
-            System.out.println();
 
-            signUpCity(connection, "Molodechno");
+            signUpCity(connection, "Molodechno");                                   // добавление новых городов в БД
             signUpCity(connection, "Batumi");
             signUpCity(connection, "Pinsk");
             executeUpdate(connection, "UPDATE students SET city=5 WHERE id=2;");
             viewingTable(connection);
-            System.out.println();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {        //выгрузка (дерегистрация) драйверов
+            try {
+                DriverManager.deregisterDriver(driver);
+            } catch (SQLException e) {
+                System.out.println("Database access error!");
+            }
+        });
     }
 }
