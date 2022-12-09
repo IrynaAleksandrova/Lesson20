@@ -103,15 +103,19 @@ public class Main {
             executeUpdate(connection, "UPDATE students SET city=5 WHERE id=2;");
             viewingTable(connection);
 
+            connection.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {        //выгрузка (дерегистрация) драйверов
-            try {
-                DriverManager.deregisterDriver(driver);
-            } catch (SQLException e) {
-                System.out.println("Database access error!");
-            }
-        });
+
+//        DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {        //выгрузка (дерегистрация) драйверов
+//            try {
+//                DriverManager.deregisterDriver(driver);
+//            } catch (SQLException e) {
+//                System.out.println("Database access error!");
+//            }
+//        });
+
     }
 }
